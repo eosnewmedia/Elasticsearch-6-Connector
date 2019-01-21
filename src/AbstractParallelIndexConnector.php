@@ -55,11 +55,12 @@ abstract class AbstractParallelIndexConnector extends AbstractConnector
 
     /**
      * Creates the parallel index, migrates all documents from current index to parallel index,
-     * switches the current index to parallel index and then deletes the old index
+     * switches the current index to parallel index and then deletes the old index (if remove old index is true)
      *
      * @param string $type
+     * @param bool $removeOldIndex
      */
-    protected function migrateToParallelIndex(string $type): void
+    protected function migrateToParallelIndex(string $type, bool $removeOldIndex = true): void
     {
         $currentIndexName = $this->getIndexName($type);
         $parallelIndexName = $this->getParallelIndexName($type);
@@ -95,12 +96,14 @@ abstract class AbstractParallelIndexConnector extends AbstractConnector
         // switch current index to new index
         $this->switchToParallelIndex($type);
 
-        // delete old index
-        $this->getConnection()->indices()->delete(
-            [
-                'index' => $currentIndexName,
-            ]
-        );
+        if ($removeOldIndex) {
+            // delete old index
+            $this->getConnection()->indices()->delete(
+                [
+                    'index' => $currentIndexName,
+                ]
+            );
+        }
     }
 
     /**
