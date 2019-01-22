@@ -66,7 +66,7 @@ abstract class AbstractParallelIndexConnector extends AbstractConnector
         $parallelIndexName = $this->getParallelIndexName($type);
 
         // create new index
-        $this->createIndex($parallelIndexName, $type, true);
+        $this->executeCreateIndex($parallelIndexName, $type, true);
 
         // fetch documents from current index and store to new index
         $searchResult = $this->getConnection()->search(
@@ -97,7 +97,7 @@ abstract class AbstractParallelIndexConnector extends AbstractConnector
         $this->switchToParallelIndex($type);
 
         if ($removeOldIndex) {
-            // delete old index
+            // delete old index (without pipelines!)
             $this->getConnection()->indices()->delete(
                 [
                     'index' => $currentIndexName,
