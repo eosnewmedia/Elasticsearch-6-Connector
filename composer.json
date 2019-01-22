@@ -1,5 +1,5 @@
 {
-  "name": "eosnewmedia/elasticsearch-6-connector",
+  "name": "eos/elasticsearch-6-connector",
   "description": "An abstract php connector for elasticsearch 6",
   "license": "MIT",
   "authors": [
