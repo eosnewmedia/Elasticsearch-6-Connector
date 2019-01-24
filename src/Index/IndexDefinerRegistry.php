@@ -55,7 +55,7 @@ class IndexDefinerRegistry implements ParallelIndexDefinerInterface
     public function switchToParallelIndex(string $type): void
     {
         if (!array_key_exists($type, $this->definitions)) {
-            return null;
+            return;
         }
 
         $indexDefiner = $this->definitions[$type];

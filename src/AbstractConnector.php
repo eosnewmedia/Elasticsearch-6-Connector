@@ -141,7 +141,7 @@ abstract class AbstractConnector
      * @param bool $overwrite
      * @throws \RuntimeException
      */
-    protected function createIndex(string $indexName, string $type, bool $overwrite = false): void
+    protected function executeCreateIndex(string $indexName, string $type, bool $overwrite = false): void
     {
         if ($this->getConnection()->indices()->exists(['index' => $indexName])) {
             if (!$overwrite) {
@@ -169,13 +169,24 @@ abstract class AbstractConnector
     }
 
     /**
+     * Creates the elasticsearch index for the given type
+     *
+     * @param string $type
+     * @param bool $overwrite
+     */
+    protected function createIndex(string $type, bool $overwrite = false): void
+    {
+        $this->executeCreateIndex($this->getIndexName($type), $type, $overwrite);
+    }
+
+    /**
      * Drops an elasticsearch index
      *
      * @param string $indexName
      * @param string $type
      * @throws \RuntimeException
      */
-    protected function dropIndex(string $indexName, string $type): void
+    protected function executeDropIndex(string $indexName, string $type): void
     {
         if (!$this->getConnection()->indices()->exists(['index' => $indexName])) {
             return;
@@ -186,6 +197,16 @@ abstract class AbstractConnector
         }
 
         $this->getConnection()->indices()->delete(['index' => $indexName]);
+    }
+
+    /**
+     * Drops the elasticsearch index for the given type
+     *
+     * @param string $type
+     */
+    protected function dropIndex(string $type): void
+    {
+        $this->executeDropIndex($this->getIndexName($type), $type);
     }
 
     /**
